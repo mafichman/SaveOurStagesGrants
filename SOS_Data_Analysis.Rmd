@@ -1,12 +1,20 @@
 ---
-title: "Save Our Stages Grants"
-author: "Michael Fichman"
-date: "August 25, 2021"
+title: "Save Our Stages By The Numbers"
 output:
   html_document:
     toc: true
     toc_float: true
 ---
+
+# About
+
+This repo contains interactive maps and analysis of SBA Grants given as part of the "Save Our Stages" Act passed by the US Congress. It is a work in progress, more analysis will be added on an ongoing basis.
+
+Use the sidebar at left to navigate through the document and view summaries of grants by state and by municality. There is also a searchable database of all grants awarded as of August 17th, 2021.
+
+The data being used here have been geocoded using the Google Geocoding service, which is highly accurate but not error free. Data are current as of August 17, 2021, and are available [from the SBA](https://data.sba.gov/dataset/svog/resource/33270c2a-f1c5-4dcb-bc98-aedcaec19ef3).
+
+This repo is created and maintained by [Michael Fichman](http://michael-fichman.com).
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
@@ -25,7 +33,7 @@ geocoded_venues <- read.csv("~/GitHub/SaveOurStagesGrants/data/geocoded_venues.c
 
 # Grantee Map
 
-Use the menu at the top right of the map to hide or activate certain types of grantees.
+Use the menu at the top right of the map to view certain types of grantees. Hover over the points on the map to see the grantee's name and grant amount.
 
 ```{r leaflet_map, warning = FALSE, message = FALSE}
 l <- leaflet() %>% 
@@ -98,12 +106,14 @@ l <- leaflet() %>%
     options = layersControlOptions(collapsed = TRUE)
     ) %>%
   addScaleBar(position = "topleft") %>%
-  addSearchOSM(., options = searchOptions(autoCollapse = TRUE, minLength = 2))
+  addSearchOSM(options = searchOptions(collapsed = FALSE))
 
 l
 ```
 
 # Searchable Database
+
+A database of grants published August 17th, 2021 by the SBA. Contains 11321 awards.
 
 ```{r searchable_table, message = FALSE, warning = FALSE}
 datatable(geocoded_venues %>%
@@ -111,21 +121,47 @@ datatable(geocoded_venues %>%
             rename('Grant ($)' = svog_amount,
                    Grantee = svog_grantee,
                    Category = acct_type), 
-          options = list(pageLength = 15))
+          options = list(pageLength = 5))
 ```
 
 # State Summary
 
-```{r state_summary, message = FALSE, warning = FALSE}
+Total number of grants, median grant amount and total grants awarded by US State and territory.
+
+```{r muni_summary, message = FALSE, warning = FALSE}
 geocoded_venues %>%
   mutate(State = toupper(State)) %>%
   group_by(State) %>%
   summarize(n = n(),
-            sum = sum(svog_amount)) %>%
+            sum = sum(svog_amount),
+            med = median(svog_amount)) %>%
   mutate(sum = round(sum/1000000, digits = 2),
-         'Avg Grant (Millions USD)' = round(sum / n, digits = 2)) %>%
+         'Median Award ($)' = round(med, digits = 0)) %>%
+  select(-med) %>%
   rename(Grants = n,
-         'Total (Millions USD)' = sum) %>%
+         'Total ($ Millions)' = sum) %>%
+  datatable(., 
+          options = list(pageLength = 10))
+```
+
+# Municipal Summary
+
+Total number of grants, median grant amount and total grants awarded by municipality.
+
+```{r state_summary, message = FALSE, warning = FALSE}
+geocoded_venues %>%
+  mutate(City = toupper(City),
+         State = toupper(State)) %>%
+  group_by(City, State) %>%
+  summarize(n = n(),
+            sum = sum(svog_amount),
+            med = median(svog_amount)) %>%
+  arrange(-sum) %>%
+  mutate(sum = round(sum/1000000, digits = 2),
+         'Median Award ($)' = round(med, digits = 0)) %>%
+  rename(Grants = n,
+         'Total ($ Millions)' = sum) %>%
+  select(-med) %>%
   datatable(., 
           options = list(pageLength = 10))
 ```
