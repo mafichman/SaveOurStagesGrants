@@ -1,0 +1,131 @@
+---
+title: "Save Our Stages Grants"
+author: "Michael Fichman"
+date: "August 25, 2021"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(tidyverse)
+library(leaflet)
+library(leaflet.extras)
+library(leaflet.providers)
+library(sf)
+library(ggmap)
+library(DT)
+
+geocoded_venues <- read.csv("~/GitHub/SaveOurStagesGrants/data/geocoded_venues.csv") %>%
+  rename(acct_type = 'Account.Venue')
+```
+
+# Grantee Map
+
+Use the menu at the top right of the map to hide or activate certain types of grantees.
+
+```{r leaflet_map, warning = FALSE, message = FALSE}
+l <- leaflet() %>% 
+  addProviderTiles(providers$Esri.WorldTopoMap) %>%
+  setView(lng = mean(geocoded_venues$lon, na.rm = TRUE),
+          lat = mean(geocoded_venues$lat, na.rm = TRUE),
+          zoom = 3) %>%
+  addScaleBar(position = "topleft") %>%
+  addCircleMarkers(data= geocoded_venues %>%
+                     filter(acct_type == "Live performing arts organization operator"),
+                   lng=~lon, 
+                   lat=~lat,
+                   radius =~ 1, 
+                   fillOpacity =~ 0.5,
+                   color= "blue", # "~pal(acct_type)"
+                   label=~paste(svog_grantee, address_full, " | Grant $", svog_amount),
+                   group= "Live performing arts organization operator") %>%
+  addCircleMarkers(data= geocoded_venues %>%
+                     filter(acct_type == "Live venue operator or promoter"),
+                   lng=~lon, 
+                   lat=~lat,
+                   radius =~ 1, 
+                   fillOpacity =~ 0.5,
+                   color= "blue", # "~pal(acct_type)"
+                   label=~paste(svog_grantee, address_full, " | Grant $", svog_amount),
+                   group= "Live venue operator or promoter") %>%
+  addCircleMarkers(data= geocoded_venues %>%
+                     filter(acct_type == "Motion picture theater operator"),
+                   lng=~lon, 
+                   lat=~lat,
+                   radius =~ 1, 
+                   fillOpacity =~ 0.5,
+                   color= "blue", # "~pal(acct_type)"
+                   label=~paste(svog_grantee, address_full, " | Grant $", svog_amount),
+                   group= "Motion picture theater operator") %>%
+  addCircleMarkers(data= geocoded_venues %>%
+                     filter(acct_type == "Museum Operator"),
+                   lng=~lon, 
+                   lat=~lat,
+                   radius =~ 1, 
+                   fillOpacity =~ 0.5,
+                   color= "blue", # "~pal(acct_type)"
+                   label=~paste(svog_grantee, address_full, " | Grant $", svog_amount),
+                   group= "Museum Operator") %>%
+  addCircleMarkers(data= geocoded_venues %>%
+                     filter(acct_type == "Talent representative"),
+                   lng=~lon, 
+                   lat=~lat,
+                   radius =~ 1, 
+                   fillOpacity =~ 0.5,
+                   color= "blue", # "~pal(acct_type)"
+                   label=~paste(svog_grantee, address_full, " | Grant $", svog_amount),
+                   group= "Talent representative") %>%
+  addCircleMarkers(data= geocoded_venues %>%
+                     filter(acct_type == "Theatrical producer"),
+                   lng=~lon, 
+                   lat=~lat,
+                   radius =~ 1, 
+                   fillOpacity =~ 0.5,
+                   color= "blue", # "~pal(acct_type)"
+                   label=~paste(svog_grantee, address_full, " | Grant $", svog_amount),
+                   group= "Theatrical producer") %>%
+  addLayersControl(
+    overlayGroups = c("Live performing arts organization operator", 
+                      "Live venue operator or promoter",
+                      "Motion picture theater operator",
+                      "Museum Operator",
+                      "Talent representative",
+                      "Theatrical producer") ,
+    options = layersControlOptions(collapsed = TRUE)
+    ) %>%
+  addScaleBar(position = "topleft") %>%
+  addSearchOSM(., options = searchOptions(autoCollapse = TRUE, minLength = 2))
+
+l
+```
+
+# Searchable Database
+
+```{r searchable_table, message = FALSE, warning = FALSE}
+datatable(geocoded_venues %>%
+            select(-X, -lon, -lat, -address_full) %>%
+            rename('Grant ($)' = svog_amount,
+                   Grantee = svog_grantee,
+                   Category = acct_type), 
+          options = list(pageLength = 15))
+```
+
+# State Summary
+
+```{r state_summary, message = FALSE, warning = FALSE}
+geocoded_venues %>%
+  mutate(State = toupper(State)) %>%
+  group_by(State) %>%
+  summarize(n = n(),
+            sum = sum(svog_amount)) %>%
+  mutate(sum = round(sum/1000000, digits = 2),
+         'Avg Grant (Millions USD)' = round(sum / n, digits = 2)) %>%
+  rename(Grants = n,
+         'Total (Millions USD)' = sum) %>%
+  datatable(., 
+          options = list(pageLength = 10))
+```
