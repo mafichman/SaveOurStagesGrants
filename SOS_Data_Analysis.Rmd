@@ -105,6 +105,11 @@ l <- leaflet() %>%
                       "Theatrical producer") ,
     options = layersControlOptions(collapsed = TRUE)
     ) %>%
+  hideGroup(c("Live performing arts organization operator", 
+                      "Motion picture theater operator",
+                      "Museum Operator",
+                      "Talent representative",
+                      "Theatrical producer")) %>%
   addScaleBar(position = "topleft") %>%
   addSearchOSM(options = searchOptions(collapsed = FALSE))
 
