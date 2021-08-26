@@ -35,7 +35,7 @@ geocoded_venues <- read.csv("~/GitHub/SaveOurStagesGrants/data/geocoded_venues.c
 
 Use the menu at the top right of the map to view certain types of grantees. Hover over the points on the map to see the grantee's name and grant amount.
 
-```{r leaflet_map, warning = FALSE, message = FALSE}
+```{r leaflet_map, warning = FALSE, message = FALSE, eval = FALSE}
 l <- leaflet() %>% 
   addProviderTiles(providers$Esri.WorldTopoMap) %>%
   setView(lng = mean(geocoded_venues$lon, na.rm = TRUE),
