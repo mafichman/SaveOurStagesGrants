@@ -116,6 +116,27 @@ l <- leaflet() %>%
 l
 ```
 
+```{r leaflet_map2, warning = FALSE, message = FALSE}
+l <- leaflet() %>% 
+  addProviderTiles(providers$Esri.WorldTopoMap) %>%
+  setView(lng = mean(geocoded_venues$lon, na.rm = TRUE),
+          lat = mean(geocoded_venues$lat, na.rm = TRUE),
+          zoom = 3) %>%
+  addScaleBar(position = "topleft") %>%
+  addCircleMarkers(data= geocoded_venues,
+                   lng=~lon, 
+                   lat=~lat,
+                   radius =~ 1, 
+                   fillOpacity =~ 0.5,
+                   color= "blue", # "~pal(acct_type)"
+                   label=~paste(svog_grantee, " | Grant $", svog_amount),
+                   group= "Theatrical producer",
+                   clusterOptions = markerClusterOptions())
+  
+
+l
+```
+
 # Searchable Database
 
 A database of grants published August 17th, 2021 by the SBA. Contains 11321 awards.
