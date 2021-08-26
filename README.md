@@ -5,4 +5,6 @@ This repo contains interactive maps and analysis of SBA Grants given as part of 
 
 Data are current as of August 17, 2021, and are available [from the SBA](https://data.sba.gov/dataset/svog/resource/33270c2a-f1c5-4dcb-bc98-aedcaec19ef3).
 
+The data being used here have been geocoded using the Google Geocoding service, which is highly accurate but not error free.
+
 This repo is created and maintained by [Michael Fichman](http://michael-fichman.com).
