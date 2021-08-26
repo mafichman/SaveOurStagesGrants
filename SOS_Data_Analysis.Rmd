@@ -116,7 +116,7 @@ l <- leaflet() %>%
 l
 ```
 
-```{r leaflet_map2, warning = FALSE, message = FALSE, eval = FALSE}
+```{r leaflet_map2, warning = FALSE, message = FALSE}
 l <- leaflet() %>% 
   addProviderTiles(providers$Esri.WorldTopoMap) %>%
   setView(lng = mean(geocoded_venues$lon, na.rm = TRUE),
