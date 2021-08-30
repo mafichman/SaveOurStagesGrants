@@ -29,6 +29,62 @@ library(DT)
 
 geocoded_venues <- read.csv("~/GitHub/SaveOurStagesGrants/data/geocoded_venues.csv") %>%
   rename(acct_type = 'Account.Venue')
+
+# graphic themes
+
+plotTheme <- theme(
+  plot.title =element_text(size=12),
+  plot.subtitle = element_text(size=8),
+  plot.caption = element_text(size = 6),
+  axis.text.x = element_text(size = 10, angle = 45, hjust = 1),
+  axis.text.y = element_text(size = 10),
+  axis.title.y = element_text(size = 10),
+  # Set the entire chart region to blank
+  panel.background=element_blank(),
+  plot.background=element_blank(),
+  #panel.border=element_rect(colour="#F0F0F0"),
+  # Format the grid
+  panel.grid.major=element_line(colour="#D0D0D0",size=.75),
+  axis.ticks=element_blank())
+
+plotTheme12ptY <- theme(
+  plot.title =element_text(size=16),
+  plot.subtitle = element_text(size=8),
+  plot.caption = element_text(size = 6),
+  axis.text.x = element_text(size = 14, angle = 45, hjust = 1),
+  axis.text.y = element_text(size = 14),
+  axis.title.y = element_text(size = 14),
+  axis.title.x = element_text(size = 14),
+  # Set the entire chart region to blank
+  panel.background=element_blank(),
+  plot.background=element_blank(),
+  #panel.border=element_rect(colour="#F0F0F0"),
+  # Format the grid
+  panel.grid.major=element_line(colour="#D0D0D0",size=.75),
+  axis.ticks=element_blank())
+
+mapTheme <- function(base_size = 12) {
+  theme(plot.title =element_text(size=12),
+                  plot.subtitle = element_text(size=8),
+                  plot.caption = element_text(size = 6),
+                  axis.line=element_blank(),
+                  axis.text.x=element_blank(),
+                  axis.text.y=element_blank(),
+                  axis.ticks=element_blank(),
+                  axis.title.x=element_blank(),
+                  axis.title.y=element_blank(),
+                  panel.background=element_blank(),
+                  panel.border=element_blank(),
+                  panel.grid.major=element_line(colour = 'transparent'),
+                  panel.grid.minor=element_blank(),
+                  legend.direction = "vertical", 
+                  legend.position = "right",
+                  plot.margin = margin(1, 1, 1, 1, 'cm'),
+                  legend.key.height = unit(1, "cm"), legend.key.width = unit(0.2, "cm")
+  )}
+
+palette <- c("#10142A", "#47E9B9", "#F55D60", "#71EA48", "#C148EA", "EAC148" )
+viridisPalette <- c("#440154", "#73D055", "#F55D60", "#238A8D", "#FDE725")
 ```
 
 # Grantee Map
@@ -188,4 +244,23 @@ geocoded_venues %>%
   select(-med) %>%
   datatable(., 
           options = list(pageLength = 10))
+```
+
+# Grant Volume by Operator Type
+
+```{r grants_hist, message = FALSE, warning = FALSE}
+geocoded_venues %>%
+  group_by(acct_type) %>%
+  tally() %>%
+  ggplot()+
+  geom_bar(aes(x = reorder(acct_type, n) , y = n), 
+           stat = "identity", fill = viridisPalette[4],
+           alpha = 0.6)+
+  coord_flip()+
+  labs(title = "SVOG Awards by Operator Type",
+      subtitle = "n = 11321, Data: SBA, 11/7/2021",
+      caption = "michael-fichman.com",
+      x = "",
+      y = "Number of Grants")+
+  plotTheme
 ```
