@@ -108,8 +108,8 @@ l <- leaflet() %>%
                    lat=~lat,
                    radius =~ 1, 
                    fillOpacity =~ 0.5,
-                   color= "blue", # "~pal(acct_type)"
-                   label=~paste(svog_grantee, address_full, " | Grant $", svog_amount),
+                   color= "grey", # "~pal(acct_type)"
+                   label=~paste(svog_grantee, " | Grant $", svog_amount),
                    group= "Live performing arts organization operator") %>%
   addCircleMarkers(data= geocoded_venues %>%
                      filter(acct_type == "Live venue operator or promoter"),
@@ -117,8 +117,8 @@ l <- leaflet() %>%
                    lat=~lat,
                    radius =~ 1, 
                    fillOpacity =~ 0.5,
-                   color= "blue", # "~pal(acct_type)"
-                   label=~paste(svog_grantee, address_full, " | Grant $", svog_amount),
+                   color= "yellow", # "~pal(acct_type)"
+                   label=~paste(svog_grantee, " | Grant $", svog_amount),
                    group= "Live venue operator or promoter") %>%
   addCircleMarkers(data= geocoded_venues %>%
                      filter(acct_type == "Motion picture theater operator"),
@@ -126,8 +126,8 @@ l <- leaflet() %>%
                    lat=~lat,
                    radius =~ 1, 
                    fillOpacity =~ 0.5,
-                   color= "blue", # "~pal(acct_type)"
-                   label=~paste(svog_grantee, address_full, " | Grant $", svog_amount),
+                   color= "purple", # "~pal(acct_type)"
+                   label=~paste(svog_grantee, " | Grant $", svog_amount),
                    group= "Motion picture theater operator") %>%
   addCircleMarkers(data= geocoded_venues %>%
                      filter(acct_type == "Museum Operator"),
@@ -135,8 +135,8 @@ l <- leaflet() %>%
                    lat=~lat,
                    radius =~ 1, 
                    fillOpacity =~ 0.5,
-                   color= "blue", # "~pal(acct_type)"
-                   label=~paste(svog_grantee, address_full, " | Grant $", svog_amount),
+                   color= "green", # "~pal(acct_type)"
+                   label=~paste(svog_grantee, " | Grant $", svog_amount),
                    group= "Museum Operator") %>%
   addCircleMarkers(data= geocoded_venues %>%
                      filter(acct_type == "Talent representative"),
@@ -145,7 +145,7 @@ l <- leaflet() %>%
                    radius =~ 1, 
                    fillOpacity =~ 0.5,
                    color= "blue", # "~pal(acct_type)"
-                   label=~paste(svog_grantee, address_full, " | Grant $", svog_amount),
+                   label=~paste(svog_grantee, " | Grant $", svog_amount),
                    group= "Talent representative") %>%
   addCircleMarkers(data= geocoded_venues %>%
                      filter(acct_type == "Theatrical producer"),
@@ -153,8 +153,8 @@ l <- leaflet() %>%
                    lat=~lat,
                    radius =~ 1, 
                    fillOpacity =~ 0.5,
-                   color= "blue", # "~pal(acct_type)"
-                   label=~paste(svog_grantee, address_full, " | Grant $", svog_amount),
+                   color= "red", # "~pal(acct_type)"
+                   label=~paste(svog_grantee, " | Grant $", svog_amount),
                    group= "Theatrical producer") %>%
   addLayersControl(
     overlayGroups = c("Live performing arts organization operator", 
