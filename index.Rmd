@@ -85,6 +85,8 @@ mapTheme <- function(base_size = 12) {
 
 palette <- c("#10142A", "#47E9B9", "#F55D60", "#71EA48", "#C148EA", "EAC148" )
 viridisPalette <- c("#440154", "#73D055", "#F55D60", "#238A8D", "#FDE725")
+
+options(scipen=999)
 ```
 
 # Grantee Map
@@ -108,7 +110,7 @@ l <- leaflet() %>%
                    lat=~lat,
                    radius =~ 1, 
                    fillOpacity =~ 0.5,
-                   color= "grey", # "~pal(acct_type)"
+                   color= "blue", # "~pal(acct_type)"
                    label=~paste(svog_grantee, " | Grant $", svog_amount),
                    group= "Live performing arts organization operator") %>%
   addCircleMarkers(data= geocoded_venues %>%
@@ -117,7 +119,7 @@ l <- leaflet() %>%
                    lat=~lat,
                    radius =~ 1, 
                    fillOpacity =~ 0.5,
-                   color= "yellow", # "~pal(acct_type)"
+                   color= "blue", # "~pal(acct_type)"
                    label=~paste(svog_grantee, " | Grant $", svog_amount),
                    group= "Live venue operator or promoter") %>%
   addCircleMarkers(data= geocoded_venues %>%
@@ -126,7 +128,7 @@ l <- leaflet() %>%
                    lat=~lat,
                    radius =~ 1, 
                    fillOpacity =~ 0.5,
-                   color= "purple", # "~pal(acct_type)"
+                   color= "blue", # "~pal(acct_type)"
                    label=~paste(svog_grantee, " | Grant $", svog_amount),
                    group= "Motion picture theater operator") %>%
   addCircleMarkers(data= geocoded_venues %>%
@@ -135,7 +137,7 @@ l <- leaflet() %>%
                    lat=~lat,
                    radius =~ 1, 
                    fillOpacity =~ 0.5,
-                   color= "green", # "~pal(acct_type)"
+                   color= "blue", # "~pal(acct_type)"
                    label=~paste(svog_grantee, " | Grant $", svog_amount),
                    group= "Museum Operator") %>%
   addCircleMarkers(data= geocoded_venues %>%
@@ -153,7 +155,7 @@ l <- leaflet() %>%
                    lat=~lat,
                    radius =~ 1, 
                    fillOpacity =~ 0.5,
-                   color= "red", # "~pal(acct_type)"
+                   color= "blue", # "~pal(acct_type)"
                    label=~paste(svog_grantee, " | Grant $", svog_amount),
                    group= "Theatrical producer") %>%
   addLayersControl(
@@ -163,7 +165,7 @@ l <- leaflet() %>%
                       "Museum Operator",
                       "Talent representative",
                       "Theatrical producer") ,
-    options = layersControlOptions(collapsed = TRUE)
+    options = layersControlOptions(collapsed = FALSE)
     ) %>%
   hideGroup(c("Live performing arts organization operator", 
                       "Motion picture theater operator",
@@ -229,9 +231,9 @@ geocoded_venues %>%
           options = list(pageLength = 10))
 ```
 
-# Grant Volume by Operator Type
+# Grants by Operator Type
 
-```{r grants_hist, message = FALSE, warning = FALSE}
+```{r grants_total, message = FALSE, warning = FALSE}
 geocoded_venues %>%
   group_by(acct_type) %>%
   tally() %>%
@@ -241,9 +243,30 @@ geocoded_venues %>%
            alpha = 0.6)+
   coord_flip()+
   labs(title = "SVOG Awards by Operator Type",
-      subtitle = "n = 11321, Data: SBA, 11/7/2021",
+      subtitle = "n = 11321, Data: SBA, 8/17/2021",
       caption = "michael-fichman.com",
       x = "",
       y = "Number of Grants")+
+  plotTheme
+```
+
+```{r grants_mean_median, message = FALSE, warning = FALSE}
+geocoded_venues %>%
+  group_by(acct_type) %>%
+  summarize('Average Grant' = mean(svog_amount),
+            'Median Grant' = median(svog_amount)) %>%
+  gather(-acct_type, key = "variable", value = "value") %>%
+  mutate(value = value / 1000) %>%
+  ggplot()+
+  geom_bar(aes(x = acct_type , y = value), 
+           stat = "identity", fill = viridisPalette[4],
+           alpha = 0.6)+
+  coord_flip()+
+  facet_wrap(~variable, scales = "free_x")+
+  labs(title = "SVOG Award Amounts by Operator Type",
+      subtitle = "n = 11321, Data: SBA, 8/17/2021",
+      caption = "michael-fichman.com",
+      x = "",
+      y = "Dollars (in Thousands)")+
   plotTheme
 ```
