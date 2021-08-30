@@ -14,7 +14,7 @@ Use the sidebar at left to navigate through the document and view summaries of g
 
 The data being used here have been geocoded using the Google Geocoding service, which is highly accurate but not error free. Data are current as of August 17, 2021, and are available [from the SBA](https://data.sba.gov/dataset/svog/resource/33270c2a-f1c5-4dcb-bc98-aedcaec19ef3).
 
-This repo is created and maintained by [Michael Fichman](http://michael-fichman.com).
+This repo is created and maintained by [Michael Fichman](http://michael-fichman.com), Lecturer in Urban Spatial Analytics at the University of Pennsylvania and Editor of the Global Nighttime Recovery Plan.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
@@ -89,9 +89,13 @@ viridisPalette <- c("#440154", "#73D055", "#F55D60", "#238A8D", "#FDE725")
 
 # Grantee Map
 
-Use the menu at the top right of the map to view certain types of grantees. Hover over the points on the map to see the grantee's name and grant amount.
+Zoom into your region of choice to view the locations of SVOG awardees. 
 
-```{r leaflet_map, warning = FALSE, message = FALSE, eval = FALSE}
+The menu at the top right of the map allows you to toggle grantee types on and off (e.g Museum Operator or Live Venue Operator or Promoter).
+
+Hover over the points on the map to see the grantee's name and grant amount.
+
+```{r leaflet_map, warning = FALSE, message = FALSE}
 l <- leaflet() %>% 
   addProviderTiles(providers$Esri.WorldTopoMap) %>%
   setView(lng = mean(geocoded_venues$lon, na.rm = TRUE),
@@ -165,28 +169,7 @@ l <- leaflet() %>%
                       "Motion picture theater operator",
                       "Museum Operator",
                       "Talent representative",
-                      "Theatrical producer")) %>%
-  addScaleBar(position = "topleft") %>%
-  addSearchOSM(options = searchOptions(collapsed = FALSE))
-
-l
-```
-
-```{r leaflet_map2, warning = FALSE, message = FALSE}
-l <- leaflet() %>% 
-  addProviderTiles(providers$Esri.WorldTopoMap) %>%
-  setView(lng = mean(geocoded_venues$lon, na.rm = TRUE),
-          lat = mean(geocoded_venues$lat, na.rm = TRUE),
-          zoom = 3) %>%
-  addScaleBar(position = "topleft") %>%
-  addCircleMarkers(data= geocoded_venues,
-                   lng=~lon, 
-                   lat=~lat,
-                   radius =~ 1, 
-                   fillOpacity =~ 0.5,
-                   color= "blue", # "~pal(acct_type)"
-                   label=~paste(svog_grantee, " | Grant $", svog_amount))
-  
+                      "Theatrical producer"))
 
 l
 ```
