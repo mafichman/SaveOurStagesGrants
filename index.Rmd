@@ -165,7 +165,7 @@ l <- leaflet() %>%
                       "Museum Operator",
                       "Talent representative",
                       "Theatrical producer") ,
-    options = layersControlOptions(collapsed = FALSE)
+    options = layersControlOptions(collapsed = TRUE)
     ) %>%
   hideGroup(c("Live performing arts organization operator", 
                       "Motion picture theater operator",
