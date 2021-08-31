@@ -1,7 +1,7 @@
 # SaveOurStagesGrants
 Analysis and Maps of SVOG Awards
 
-[Check out a summary of the Save Our Stages grant awards, including interactive maps, searchable grantee database and state and municipal summaries.](http://htmlpreview.github.io/?https://raw.githubusercontent.com/mafichman/SaveOurStagesGrants/main/SOS_Data_Analysis.html)
+[Check out a summary of the Save Our Stages grant awards, including interactive maps, searchable grantee database and state and municipal summaries.](https://mafichman.github.io/SaveOurStagesGrants/)
 
 This repo contains interactive maps and analysis of SBA Grants given as part of the "Save Our Stages" Act passed by the US Congress. It is a work in progress, more analysis will be added on an ongoing basis.
 
